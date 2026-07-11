@@ -6868,3 +6868,15 @@ msgstr "{0} · آخر نشاط {1}"
 #: helpdesk/helpdesk/doctype/hd_ticket_comment/hd_ticket_comment.py:156
 msgid "{} people reacted to your comment"
 msgstr "{} أشخاص تفاعلوا مع تعليقك"
+
+#. ai-translated; needs-native-review
+msgid "Change operator ({0})"
+msgstr "تغيير العامل ({0})"
+
+#. ai-translated; needs-native-review
+msgid "Remove filter"
+msgstr "إزالة التصفية"
+
+#. ai-translated; needs-native-review
+msgid "Replace filter"
+msgstr "استبدال التصفية"
