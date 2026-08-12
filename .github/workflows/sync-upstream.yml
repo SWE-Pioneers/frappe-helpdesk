@@ -1,0 +1,61 @@
+name: sync-upstream
+
+# Keeps this fork current with frappe/helpdesk. Opens a PR rather than pushing to develop directly:
+# our customizations live here too, so an upstream sync is a MERGE, not a fast-forward, and a merge
+# can conflict. A PR makes that visible and reviewable instead of silently failing in a cron job.
+#
+# Our changes are deliberately additive (new files + a couple of small edits), which is what keeps
+# these merges cheap — worth preserving as the fork grows.
+
+on:
+  schedule:
+    - cron: "0 3 * * 1" # Mondays, 03:00 UTC
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Merge upstream develop, open a PR if anything changed
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          set -euo pipefail
+          git config user.name  "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+
+          git remote add upstream https://github.com/frappe/helpdesk.git
+          git fetch --quiet upstream develop
+
+          BEHIND=$(git rev-list --count HEAD..upstream/develop)
+          if [ "$BEHIND" -eq 0 ]; then
+            echo "already up to date with upstream/develop"
+            exit 0
+          fi
+          echo "behind upstream by $BEHIND commit(s)"
+
+          BRANCH="sync/upstream-${{ github.run_number }}"
+          git checkout -b "$BRANCH"
+
+          # Do NOT fail the job on conflict — commit the conflicted state so the PR shows exactly
+          # what needs a human. A silently red cron is how forks quietly rot.
+          if git merge --no-edit upstream/develop; then
+            BODY="Fast merge of \`upstream/develop\` ($BEHIND commit(s)). No conflicts."
+          else
+            git add -A
+            git commit -m "chore: merge upstream/develop (CONFLICTS — needs resolution)"
+            BODY=$'⚠️ **Merge hit conflicts.** The conflicted files are committed as-is on this branch — resolve them here before merging.'
+          fi
+
+          git push -u origin "$BRANCH"
+          gh pr create --repo "${{ github.repository }}" --base develop --head "$BRANCH" \
+            --title "chore: sync with upstream frappe/helpdesk ($BEHIND commits)" \
+            --body "$BODY"
