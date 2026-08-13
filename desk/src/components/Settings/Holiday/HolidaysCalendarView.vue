@@ -1,11 +1,11 @@
 <template>
   <div class="p-6.5 px-5 rounded-xl border border-outline-gray-2">
     <div class="mb-6.5 flex justify-between items-center">
-      <div class="ml-1">
+      <div class="ms-1">
         <Popover v-if="startYear !== endYear">
           <template #target="{ togglePopover }">
             <Button
-              class="flex items-center gap-2 font-semibold text-xl cursor-pointer select-none"
+              class="flex items-center gap-2 text-2xl-semibold cursor-pointer select-none"
               variant="ghost"
               @click="togglePopover"
               :label="currentYear + ''"
@@ -35,7 +35,7 @@
         </Popover>
         <div
           v-else
-          class="flex items-center gap-2 px-2 font-semibold text-xl select-none"
+          class="flex items-center gap-2 px-2 text-2xl-semibold select-none"
         >
           {{ startYear }}
         </div>
@@ -85,7 +85,7 @@
         :class="[
           'size-1.5 rounded-full cursor-pointer',
           {
-            'bg-surface-gray-7': visibleMonths === 'first-half',
+            'bg-surface-gray-10': visibleMonths === 'first-half',
             'bg-surface-gray-4': visibleMonths === 'second-half',
           },
         ]"
@@ -95,7 +95,7 @@
         :class="[
           'size-1.5 rounded-full cursor-pointer',
           {
-            'bg-surface-gray-7': visibleMonths === 'second-half',
+            'bg-surface-gray-10': visibleMonths === 'second-half',
             'bg-surface-gray-4': visibleMonths === 'first-half',
           },
         ]"

@@ -11,6 +11,7 @@
       <Button
         :label="__('New')"
         theme="gray"
+        class="rtl:flex-row-reverse"
         variant="solid"
         @click="emit('update:step', 'email-add')"
         icon-left="lucide-plus"
@@ -19,11 +20,11 @@
     <template #content>
       <!-- list accounts -->
       <div
-        class="-ml-2 grow"
+        class="-ms-2 grow"
         v-if="!emailAccounts.loading && Boolean(emailAccounts.data?.length)"
       >
         <div class="flex text-sm text-ink-gray-5">
-          <div class="ml-2">{{ __("Email account name") }}</div>
+          <div class="ms-2">{{ __("Email account name") }}</div>
         </div>
         <hr class="mx-2 mt-2" />
         <div
@@ -34,11 +35,17 @@
             :emailAccount="emailAccount"
             @click="emit('update:step', 'email-edit', emailAccount)"
           />
-          <hr class="mx-2" />
+          <hr
+            class="mx-2"
+            v-if="
+              emailAccount !==
+              emailAccounts?.data[emailAccounts?.data?.length - 1]
+            "
+          />
         </div>
       </div>
       <!-- fallback if no email accounts -->
-      <EmptyState
+      <div
         v-else
         variant="badge"
         :icon="EmailIcon"
@@ -50,11 +57,11 @@
 </template>
 
 <script setup lang="ts">
+import SettingsLayoutBase from "@/components/layouts/SettingsLayoutBase.vue";
 import { EmailAccount } from "@/types";
 import { createListResource } from "frappe-ui";
-import EmailAccountCard from "./EmailAccountCard.vue";
-import SettingsLayoutBase from "@/components/layouts/SettingsLayoutBase.vue";
 import { EmailIcon } from "../icons";
+import EmailAccountCard from "./EmailAccountCard.vue";
 
 const emit = defineEmits(["update:step"]);
 

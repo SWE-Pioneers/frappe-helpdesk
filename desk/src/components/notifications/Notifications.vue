@@ -2,18 +2,18 @@
   <span
     v-if="notificationStore.visible"
     ref="target"
-    class="fixed z-10 h-screen overflow-auto bg-surface-white"
+    class="fixed z-10 h-screen overflow-auto bg-surface-base"
     :style="{
       'box-shadow': '8px 0px 8px rgba(0, 0, 0, 0.1)',
       'max-width': '350px',
       'min-width': '350px',
-      left: sidebarStore.width,
+      'inset-inline-start': sidebarStore.width,
     }"
   >
     <div
-      class="sticky top-0 z-10 flex items-center justify-between border-b bg-surface-white px-5 py-2.5"
+      class="sticky top-0 z-10 flex items-center justify-between border-b bg-surface-base px-5 py-2.5"
     >
-      <span class="text-lg font-medium">Notifications</span>
+      <span class="text-lg-medium">Notifications</span>
       <div>
         <Button
           theme="blue"
@@ -51,7 +51,7 @@
         <UserAvatar :name="n.user_from" />
         <span>
           <div class="mb-2 leading-5">
-            <span class="space-x-1 text-ink-gray-7">
+            <span class="space-x-1 rtl:space-x-reverse text-ink-gray-6">
               <span
                 class="font-medium text-ink-gray-9"
                 v-if="n.notification_type !== 'Reaction' || !n.message"
@@ -76,7 +76,10 @@
             <div class="text-sm text-ink-gray-5">
               {{ dayjs.tz(n.creation).fromNow() }}
             </div>
-            <div v-if="!n.read" class="h-1.5 w-1.5 rounded-full bg-blue-400" />
+            <div
+              v-if="!n.read"
+              class="h-1.5 w-1.5 rounded-full bg-surface-blue-5"
+            />
           </div>
         </span>
       </RouterLink>
@@ -129,7 +132,10 @@ function getRoute(n: Notification) {
         params: {
           ticketId: n.reference_ticket,
         },
-        hash: "#comment-" + n.reference_comment,
+        // ?highlight is the activity deep-link target (element id, see
+        // TicketAgentActivities); the hash only selects the tab.
+        hash: "#activity",
+        query: { highlight: "comment-" + n.reference_comment },
       };
     case "Assignment":
       return {
@@ -144,10 +150,18 @@ function getRoute(n: Notification) {
         params: {
           ticketId: n.reference_ticket,
         },
-        hash: n.reference_comment
-          ? "#comment-" + n.reference_comment
-          : undefined,
+        ...(n.reference_comment
+          ? {
+              hash: "#activity",
+              query: { highlight: "comment-" + n.reference_comment },
+            }
+          : {}),
       };
   }
 }
 </script>
+<style lang="css">
+[dir="rtl"] .notifications-panel {
+  box-shadow: -8px 0px 8px rgba(0, 0, 0, 0.1) !important;
+}
+</style>

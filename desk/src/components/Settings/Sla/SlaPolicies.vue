@@ -1,7 +1,7 @@
 <template>
   <SettingsLayoutBase>
     <template #title>
-      <h1 class="text-lg font-semibold text-ink-gray-8">
+      <h1 class="text-lg-semibold text-ink-gray-8">
         {{ __("Service Level Agreements (SLAs)") }}
       </h1>
     </template>
@@ -27,6 +27,7 @@
         variant="solid"
         @click="goToNew()"
         icon-left="lucide-plus"
+        class="rtl:flex-row-reverse"
       />
     </template>
     <template
@@ -51,7 +52,7 @@
           icon="lucide-x"
           variant="ghost"
           @click="slaSearchQuery = ''"
-          class="absolute right-1 top-1/2 -translate-y-1/2"
+          class="absolute end-1 top-1/2 -translate-y-1/2"
         />
       </div>
     </template>

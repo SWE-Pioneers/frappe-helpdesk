@@ -1,10 +1,10 @@
 <template>
   <Dialog v-model:open="show" bare>
     <template #default>
-      <div class="bg-surface-modal px-4 pb-6 pt-5 sm:px-6">
+      <div class="bg-surface-elevation-2 px-4 pb-6 pt-5 sm:px-6">
         <div class="mb-5 flex items-center justify-between">
           <div>
-            <h3 class="text-2xl font-semibold leading-6 text-ink-gray-9">
+            <h3 class="text-3xl-semibold leading-6 text-ink-gray-9">
               {{ __("Call Details") }}
             </h3>
           </div>
@@ -43,19 +43,19 @@
                   :label="field.value.caller.label"
                   size="sm"
                 />
-                <div class="ml-1 flex flex-col gap-1">
+                <div class="ms-1 flex flex-col gap-1">
                   {{ field.value.caller.label }}
                 </div>
                 <FeatherIcon
                   name="arrow-right"
-                  class="mx-1 h-4 w-4 text-ink-gray-5"
+                  class="mx-1 h-4 w-4 text-ink-gray-5 rtl:rotate-180"
                 />
                 <Avatar
                   :image="field.value.receiver.image"
                   :label="field.value.receiver.label"
                   size="sm"
                 />
-                <div class="ml-1 flex flex-col gap-1">
+                <div class="ms-1 flex flex-col gap-1">
                   {{ field.value.receiver.label }}
                 </div>
               </div>

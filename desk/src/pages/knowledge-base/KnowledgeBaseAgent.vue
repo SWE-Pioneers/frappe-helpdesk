@@ -2,13 +2,17 @@
   <div class="flex flex-col">
     <LayoutHeader>
       <template #left-header>
-        <div class="text-lg font-medium text-ink-gray-9">
+        <div class="text-lg-medium text-ink-gray-9">
           {{ __("Knowledge Base") }}
         </div>
       </template>
       <template #right-header>
         <Dropdown :options="headerOptions">
-          <Button :label="__('Create')" variant="solid">
+          <Button
+            :label="__('Create')"
+            variant="solid"
+            class="rtl:flex-row-reverse"
+          >
             <template #prefix>
               <LucidePlus class="h-4 w-4" />
             </template>

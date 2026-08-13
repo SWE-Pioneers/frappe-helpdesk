@@ -5,7 +5,7 @@
         <Breadcrumbs :items="breadcrumbs" />
       </template>
       <template #right-header>
-        <div class="absolute right-0 pr-2">
+        <div class="absolute end-0 pe-2">
           <Dropdown :options="dropdownOptions">
             <template #default="{ open }">
               <Button :label="ticket.doc.status">
@@ -34,8 +34,40 @@
       v-if="ticket.doc?.name"
     >
       <!-- left side -->
-      <div class="flex items-center gap-2 max-w-[50%]">
-        <AssignTo :hide-label="true" />
+      <div class="flex items-center gap-2 max-w-[65%]">
+        <Link
+          class="min-w-0 flex-1"
+          doctype="HD Team"
+          :hide-clear-button="true"
+          :model-value="ticket.doc.agent_group"
+          @update:model-value="(val) => updateField('agent_group', val)"
+        >
+          <!-- Same trigger styling as AssignTo so the header controls match -->
+          <template #target="{ togglePopover }">
+            <Button
+              variant="outline"
+              class="!flex !justify-start w-full active:!bg-inherit hover:shadow-sm [&>span]:w-full"
+              @click="togglePopover()"
+            >
+              <div class="flex items-center min-h-5 gap-2 w-full">
+                <span
+                  class="truncate"
+                  :class="
+                    ticket.doc.agent_group
+                      ? 'text-ink-gray-7'
+                      : 'text-ink-gray-5'
+                  "
+                >
+                  {{ ticket.doc.agent_group || __("Team") }}
+                </span>
+              </div>
+              <template #suffix>
+                <LucideChevronDown class="h-4 w-4 ms-auto text-ink-gray-5" />
+              </template>
+            </Button>
+          </template>
+        </Link>
+        <AssignTo class="min-w-0 flex-1" :hide-label="true" />
       </div>
       <!-- right side -->
       <div class="flex items-center gap-2">
@@ -52,7 +84,7 @@
             :modelValue="tabIndex"
             :tabs="tabs"
             @update:modelValue="changeTabTo"
-            class="[&_[role='tab']]:px-0 [&_[role='tablist']]:px-5 [&_[role='tablist']]:gap-7.5"
+            class="[&_[role='tab']]:px-0 [&_[role='tablist']]:px-3 [&_[role='tablist']]:gap-7.5"
           >
             <template #tab-panel="{ tab }">
               <div v-if="tab.name === 'details'">
@@ -70,12 +102,12 @@
                   :ticket="ticket.doc"
                 />
                 <!-- SLA Section -->
-                <h3 class="px-6 pt-3 font-semibold text-base">
+                <h3 class="px-6 pt-3 text-base-semibold">
                   {{ __("SLA") }}
                 </h3>
                 <TicketAgentDetails :ticket="ticket.doc" />
                 <!-- Ticket Fields -->
-                <h3 class="px-6 pt-3 font-semibold text-base">
+                <h3 class="px-6 pt-3 text-base-semibold">
                   {{ __("Details") }}
                 </h3>
                 <TicketAgentFields
@@ -105,7 +137,7 @@
             </template>
           </Tabs>
           <CommunicationArea
-            class="sticky bottom-0 z-50 bg-white"
+            class="sticky bottom-0 z-50 bg-surface-base"
             ref="communicationAreaRef"
             v-model="ticket.doc"
             :ticketId="ticket.doc?.name"
@@ -153,7 +185,7 @@
         >
           {{ __("Confirm") }}
         </Button>
-        <Button class="ml-2" @click="showSubjectDialog = false">
+        <Button class="ms-2" @click="showSubjectDialog = false">
           {{ __("Close") }}
         </Button>
       </template>
@@ -190,7 +222,7 @@ import {
   watchEffect,
 } from "vue";
 
-import { CommunicationArea, LayoutHeader } from "@/components";
+import { CommunicationArea, LayoutHeader, Link } from "@/components";
 import {
   ActivityIcon,
   CommentIcon,
@@ -212,7 +244,11 @@ import {
 } from "@/composables/formCustomisation";
 import { useScreenSize } from "@/composables/screen";
 import { useActiveTabManager } from "@/composables/useActiveTabManager";
-import { reloadTicket, useTicket } from "@/composables/useTicket";
+import {
+  reloadTicket,
+  revalidateTicket,
+  useTicket,
+} from "@/composables/useTicket";
 import { globalStore } from "@/stores/globalStore";
 import { getMeta } from "@/stores/meta";
 import { useTelephonyStore } from "@/stores/telephony";
@@ -611,6 +647,9 @@ function filterActivities(eventType: TicketTab) {
 
 onMounted(() => {
   document.title = props.ticketId;
+  // Revisiting a ticket: show the cached conversation immediately and refresh it
+  // in place (mobile has no live socket refresh to keep the cache current).
+  revalidateTicket(props.ticketId);
 });
 
 onUnmounted(() => {

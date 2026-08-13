@@ -5,7 +5,7 @@
   >
     <LoadingIndicator class="w-4" />
   </div>
-  <div v-else class="-ml-2 grow">
+  <div v-else class="-ms-2 grow">
     <div
       v-if="!assignmentRulesListData.loading && !assignmentRulesList?.length"
       class="flex flex-col items-center justify-center gap-4 h-full"
@@ -16,7 +16,7 @@
         <Settings class="size-6 text-ink-gray-6 rotate-90" />
       </div>
       <div class="flex flex-col items-center gap-1">
-        <div class="text-base font-medium text-ink-gray-6">
+        <div class="text-base-medium text-ink-gray-6">
           {{ __("No assignment rule found") }}
         </div>
         <div class="text-p-sm text-ink-gray-5 max-w-60 text-center">
@@ -26,7 +26,7 @@
     </div>
     <div v-else>
       <div class="grid grid-cols-12 items-center gap-4 text-sm text-ink-gray-5">
-        <div class="col-span-7 ml-2">{{ __("Assignment rule") }}</div>
+        <div class="col-span-7 ms-2">{{ __("Assignment rule") }}</div>
         <div class="col-span-3">{{ __("Priority") }}</div>
         <div class="col-span-2">{{ __("Enabled") }}</div>
       </div>

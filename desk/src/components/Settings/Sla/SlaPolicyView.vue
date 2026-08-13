@@ -1,18 +1,9 @@
 <template>
-  <SettingsLayoutBase>
-    <template #title>
-      <div class="flex items-center gap-2">
-        <Button
-          variant="ghost"
-          icon-left="chevron-left"
-          :label="slaData.service_level || __('New SLA Policy')"
-          size="md"
-          @click="goBack()"
-          class="cursor-pointer -ml-4 hover:bg-transparent focus:bg-transparent focus:outline-none focus:ring-0 focus:ring-offset-0 focus-visible:none active:bg-transparent active:outline-none active:ring-0 active:ring-offset-0 active:text-ink-gray-5 font-semibold text-ink-gray-7 text-lg hover:opacity-70 !pr-0"
-        />
-        <UnsavedBadge :show="isDirty" />
-      </div>
-    </template>
+  <SettingsLayoutBase
+    :back-label="slaData.service_level || __('New SLA Policy')"
+    :on-back="goBack"
+    :dirty="isDirty"
+  >
     <template #header-actions>
       <div class="flex gap-4 items-center">
         <div
@@ -20,7 +11,7 @@
           @click="toggleEnabled"
         >
           <Switch size="sm" v-model="slaData.enabled" />
-          <span class="text-sm text-ink-gray-7 font-medium">
+          <span class="text-sm-medium text-ink-gray-7">
             {{ __("Enabled") }}
           </span>
         </div>
@@ -71,7 +62,7 @@
         <hr class="my-8" />
         <div>
           <div class="flex flex-col gap-1">
-            <span class="text-lg font-semibold text-ink-gray-8">{{
+            <span class="text-lg-semibold text-ink-gray-8">{{
               __("Assignment Conditions")
             }}</span>
             <span class="text-p-sm text-ink-gray-6">
@@ -84,7 +75,7 @@
                 :label="__('Set as default SLA')"
                 :model-value="slaData.default_sla"
                 @update:model-value="toggleDefaultSla"
-                class="text-ink-gray-6 text-base font-medium"
+                class="text-ink-gray-6 text-base-medium"
               />
               <div
                 v-if="isOldSla && slaActiveScreen.data && !slaData.default_sla"
@@ -100,7 +91,7 @@
                   </template>
                   <template #body-main>
                     <div
-                      class="text-sm text-ink-gray-6 p-2 bg-surface-white rounded-md max-w-96 text-wrap whitespace-pre-wrap leading-5"
+                      class="text-sm text-ink-gray-6 p-2 bg-surface-base rounded-md max-w-96 text-wrap whitespace-pre-wrap leading-5"
                     >
                       <code>{{ slaData.condition }}</code>
                     </div>
@@ -137,7 +128,7 @@
         <hr class="my-8" />
         <div>
           <div class="flex flex-col gap-1">
-            <span class="text-lg font-semibold text-ink-gray-8">
+            <span class="text-lg-semibold text-ink-gray-8">
               {{ __("Valid From") }}
             </span>
             <span class="text-p-sm text-ink-gray-6">
@@ -146,7 +137,7 @@
           </div>
           <div class="mt-3.5 flex gap-5 flex-col md:flex-row">
             <div class="w-full space-y-1.5">
-              <FormLabel :label="__('From date')" for="from_date" />
+              <FormLabel :label="__('From date')" for="from_date" size="md" />
               <DatePicker
                 v-model="slaData.start_date"
                 variant="subtle"
@@ -163,7 +154,7 @@
               <ErrorMessage :message="slaDataErrors.start_date" />
             </div>
             <div class="w-full space-y-1.5">
-              <FormLabel :label="__('To date')" for="to_date" />
+              <FormLabel :label="__('To date')" for="to_date" size="md" />
               <DatePicker
                 v-model="slaData.end_date"
                 variant="subtle"
@@ -184,7 +175,7 @@
         <hr class="my-8" />
         <div>
           <div class="flex flex-col gap-1">
-            <span class="text-lg font-semibold text-ink-gray-8">
+            <span class="text-lg-semibold text-ink-gray-8">
               {{ __("Response and Resolution") }}
             </span>
             <span class="text-p-sm text-ink-gray-6">
@@ -206,7 +197,7 @@
               :checked="!slaData.apply_sla_for_resolution"
               type="radio"
             />
-            <div class="select-none text-ink-gray-6 text-sm font-medium">
+            <div class="select-none text-ink-gray-6 text-sm-medium">
               Apply SLA for response time
             </div>
           </div>
@@ -219,7 +210,7 @@
               :checked="slaData.apply_sla_for_resolution"
               type="radio"
             />
-            <div class="select-none text-ink-gray-6 text-sm font-medium">
+            <div class="select-none text-ink-gray-6 text-sm-medium">
               Apply SLA for response time and resolution time
             </div>
           </div>
@@ -232,7 +223,7 @@
         <hr class="my-8" />
         <div>
           <div class="flex flex-col gap-1">
-            <span class="text-lg font-semibold text-ink-gray-8">
+            <span class="text-lg-semibold text-ink-gray-8">
               {{ __("Status Details") }}
             </span>
             <span class="text-p-sm text-ink-gray-6">
@@ -293,7 +284,6 @@ import { disableSettingModalOutsideClick } from "../settingsModal";
 import { useOnboarding } from "frappe-ui/frappe";
 import { __ } from "@/translation";
 import SettingsLayoutBase from "@/components/layouts/SettingsLayoutBase.vue";
-import UnsavedBadge from "@/components/UnsavedBadge.vue";
 import { SlaPolicyListResourceSymbol } from "@/types";
 import { HDServiceLevelAgreement } from "@/types/doctypes";
 
@@ -491,9 +481,9 @@ const toggleEnabled = () => {
   slaData.value.enabled = !slaData.value.enabled;
 };
 
-const toggleDefaultSla = () => {
-  slaData.value.default_sla = !slaData.value.default_sla;
-  if (slaData.value.default_sla) {
+const toggleDefaultSla = (value: boolean) => {
+  slaData.value.default_sla = value;
+  if (value) {
     slaData.value.enabled = true;
   }
 };

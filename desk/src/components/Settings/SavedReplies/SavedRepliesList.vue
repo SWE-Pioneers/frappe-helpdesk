@@ -14,6 +14,7 @@
         variant="solid"
         @click="goToNew()"
         icon-left="lucide-plus"
+        class="rtl:flex-row-reverse"
       />
     </template>
     <template #header-bottom>
@@ -24,7 +25,6 @@
             @update:model-value="savedRepliesSearchQuery = $event"
             :placeholder="__('Search')"
             type="text"
-            class="focus:ring-0 border-outline-gray-2"
             :debounce="300"
           >
             <template #prefix>
@@ -36,13 +36,13 @@
             icon="lucide-x"
             variant="ghost"
             @click="savedRepliesSearchQuery = ''"
-            class="absolute right-1 top-1/2 -translate-y-1/2"
+            class="absolute end-1 top-1/2 -translate-y-1/2"
           />
         </div>
         <Dropdown :options="filterOptions" placement="right">
           <template #default="{ open }">
             <Button
-              :label="activeFilter"
+              :label="activeFilterLabel"
               class="flex items-center justify-between w-fit p-4"
             >
               <template #suffix>
@@ -53,34 +53,17 @@
               </template>
             </Button>
           </template>
-          <template #item-label="{ item }">
-            <button
-              class="group flex text-ink-gray-6 gap-4 w-full justify-between items-center rounded text-base"
-              @click="item.onSelect"
-            >
-              <div class="flex items-center justify-between flex-1">
-                <span class="whitespace-nowrap">
-                  {{ item.label }}
-                </span>
-                <FeatherIcon
-                  v-if="activeFilter === item.value"
-                  name="check"
-                  class="size-4 text-ink-gray-7"
-                />
-              </div>
-            </button>
-          </template>
         </Dropdown>
       </div>
     </template>
     <template #content>
       <div
         v-if="savedRepliesListResource?.list?.loading"
-        class="flex items-center justify-center h-[stretch] absolute w-[stretch] left-0 top-5.5"
+        class="flex items-center justify-center my-auto"
       >
         <LoadingIndicator class="w-4" />
       </div>
-      <EmptyState
+      <div
         v-if="
           !savedRepliesListResource?.list?.loading &&
           !savedRepliesListResource?.data?.length
@@ -95,10 +78,10 @@
           !savedRepliesListResource?.list?.loading &&
           savedRepliesListResource?.data?.length
         "
-        class="-ml-2"
+        class="-ms-2"
       >
         <div
-          class="grid grid-cols-12 items-center gap-3 text-sm text-ink-gray-5 ml-2"
+          class="grid grid-cols-12 items-center gap-3 text-sm text-ink-gray-5 ms-2"
         >
           <div class="col-span-7">{{ __("Title") }}</div>
           <div class="col-span-2">{{ __("Owner") }}</div>
@@ -110,7 +93,7 @@
           :key="savedReply.name"
         >
           <div
-            class="grid grid-cols-12 items-center gap-4 cursor-pointer hover:bg-surface-menu-bar rounded"
+            class="grid grid-cols-12 items-center gap-4 cursor-pointer hover:bg-surface-sidebar rounded"
           >
             <div
               @click="
@@ -121,9 +104,7 @@
               "
               class="w-full px-2 flex flex-col justify-center h-12.5 col-span-7 min-w-0"
             >
-              <div
-                class="text-base text-ink-gray-7 font-medium w-full truncate"
-              >
+              <div class="text-base-medium text-ink-gray-7 w-full truncate">
                 {{ savedReply.title }}
               </div>
             </div>
@@ -143,7 +124,7 @@
               }}</span>
             </div>
             <div
-              class="flex justify-between items-center w-full pr-2 col-span-3"
+              class="flex justify-between items-center w-full pe-2 col-span-3"
             >
               <div class="flex items-center gap-1 text-sm text-ink-gray-7">
                 <component
@@ -160,7 +141,7 @@
                   icon="lucide-more-horizontal"
                   variant="ghost"
                   @click="isConfirmingDelete = false"
-                  class="mr-2"
+                  class="me-2"
                 />
               </Dropdown>
             </div>
@@ -200,6 +181,9 @@
 </template>
 
 <script setup lang="ts">
+import { useConfigStore } from "@/stores/config";
+import { __ } from "@/translation";
+import { ConfirmDelete } from "@/utils";
 import {
   Avatar,
   Button,
@@ -210,20 +194,17 @@ import {
   TextInput,
   toast,
 } from "frappe-ui";
+import { storeToRefs } from "pinia";
 import { computed, inject, ref, Ref, watch } from "vue";
-import { __ } from "@/translation";
-import { ConfirmDelete } from "@/utils";
-import SettingsLayoutBase from "../../layouts/SettingsLayoutBase.vue";
 import EmptyState from "@/components/EmptyState.vue";
-import { activeFilter } from "./savedReplies";
-import { useUserStore } from "../../../stores/user";
+import GlobeIcon from "~icons/lucide/globe";
 import UserIcon from "~icons/lucide/user";
 import UsersIcon from "~icons/lucide/users";
-import GlobeIcon from "~icons/lucide/globe";
+import { useUserStore } from "../../../stores/user";
 import { SavedReply, SavedReplyListResourceSymbol } from "../../../types";
 import SavedReplyIcon from "../../icons/SavedReplyIcon.vue";
-import { storeToRefs } from "pinia";
-import { useConfigStore } from "@/stores/config";
+import SettingsLayoutBase from "../../layouts/SettingsLayoutBase.vue";
+import { activeFilter } from "./savedReplies";
 
 const { getUser } = useUserStore();
 const { disableGlobalScopeForSavedReplies, teamRestrictionApplied } =
@@ -318,40 +299,27 @@ const duplicate = async () => {
 };
 
 const filterOptions = computed(() => {
-  const options = [
-    {
-      label: __("All"),
-      value: "All",
-      onSelect: () => {
-        applyFilter("All");
-      },
-    },
-    {
-      label: __("Personal"),
-      value: "Personal",
-      onSelect: () => {
-        applyFilter("Personal");
-      },
-    },
-    {
-      label: __("My Team"),
-      value: "Team",
-      onSelect: () => {
-        applyFilter("Team");
-      },
-    },
-    {
-      label: __("Global"),
-      value: "Global",
-      onSelect: () => {
-        applyFilter("Global");
-      },
-    },
+  const scopes = [
+    { label: __("All"), value: "All" },
+    { label: __("Personal"), value: "Personal" },
+    { label: __("My Team(s)"), value: "Team" },
+    { label: __("Global"), value: "Global" },
   ];
   if (teamRestrictionApplied.value && disableGlobalScopeForSavedReplies.value) {
-    options.pop();
+    scopes.pop();
   }
-  return options;
+  return scopes.map((scope) => ({
+    ...scope,
+    selected: activeFilter.value === scope.value,
+    onClick: () => applyFilter(scope.value),
+  }));
+});
+
+const activeFilterLabel = computed(() => {
+  return (
+    filterOptions.value.find((option) => option.value === activeFilter.value)
+      ?.label ?? activeFilter.value
+  );
 });
 
 const applyFilter = (scope: string) => {

@@ -19,7 +19,7 @@
           }"
         >
           <div class="w-full space-y-1.5">
-            <label v-if="$props.label" class="block text-xs text-ink-gray-5">
+            <label v-if="$props.label" class="block text-base text-ink-gray-5">
               {{ $props.label }}
             </label>
             <button
@@ -39,7 +39,7 @@
                 <slot name="prefix" />
                 <span
                   v-if="selectedValue"
-                  class="flex-1 truncate text-left text-base leading-5"
+                  class="flex-1 truncate text-start text-base leading-5"
                 >
                   {{ displayValue(selectedValue) }}
                 </span>
@@ -65,7 +65,7 @@
       <template #body="{ isOpen, togglePopover }">
         <div v-show="isOpen">
           <div
-            class="relative mt-1 overflow-hidden rounded-lg bg-surface-white text-base shadow-2xl"
+            class="relative mt-1 overflow-hidden rounded-lg bg-surface-base text-base shadow-2xl"
             :class="bodyClasses"
           >
             <ComboboxOptions
@@ -86,7 +86,7 @@
                   placeholder="Search"
                 />
                 <button
-                  class="absolute right-0 inline-flex h-7 w-7 items-center justify-center"
+                  class="absolute end-0 inline-flex h-7 w-7 items-center justify-center"
                   @click="selectedValue = null"
                 >
                   <FeatherIcon name="x" class="w-4" />
@@ -100,7 +100,7 @@
                 >
                   <div
                     v-if="group.group && !group.hideLabel"
-                    class="sticky top-0 truncate bg-surface-white px-2.5 py-1.5 text-sm font-medium text-ink-gray-5"
+                    class="sticky top-0 truncate bg-surface-base px-2.5 py-1.5 text-sm-medium text-ink-gray-5"
                   >
                     {{ group.group }}
                   </div>
@@ -145,7 +145,7 @@
 
                       <div
                         v-if="$slots['item-suffix'] || option?.description"
-                        class="ml-2 flex-shrink-0"
+                        class="ms-2 flex-shrink-0"
                       >
                         <slot
                           name="item-suffix"

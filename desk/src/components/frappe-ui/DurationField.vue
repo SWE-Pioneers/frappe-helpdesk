@@ -14,7 +14,7 @@
     </template>
 
     <template #body="{ close }">
-      <div class="absolute bg-surface-white top-2">
+      <div class="absolute bg-surface-base top-2">
         <!-- Built-in Duration Picker -->
         <div
           class="flex gap-2 border border-outline-gray-2 rounded w-fit min-w-max px-4 select-none shadow-sm"
@@ -35,7 +35,7 @@
                 @keyup.enter="$event.target.blur()"
               />
               <div
-                class="flex flex-col group-hover:opacity-100 opacity-0 absolute top-1/2 -translate-y-1/2 -right-3"
+                class="flex flex-col group-hover:opacity-100 opacity-0 absolute top-1/2 -translate-y-1/2 -end-3"
               >
                 <button
                   @click="increment('hours')"
@@ -70,7 +70,7 @@
                 @keyup.enter="$event.target.blur()"
               />
               <div
-                class="flex flex-col group-hover:opacity-100 opacity-0 absolute top-1/2 -translate-y-1/2 -right-3"
+                class="flex flex-col group-hover:opacity-100 opacity-0 absolute top-1/2 -translate-y-1/2 -end-3"
               >
                 <button
                   @click="increment('minutes')"
@@ -104,7 +104,7 @@
                 class="w-8 text-sm bg-transparent border-0 p-0 text-center focus:ring-0 focus:outline-none [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
               />
               <div
-                class="flex flex-col group-hover:opacity-100 opacity-0 absolute top-1/2 -translate-y-1/2 -right-3"
+                class="flex flex-col group-hover:opacity-100 opacity-0 absolute top-1/2 -translate-y-1/2 -end-3"
               >
                 <button
                   @click="increment('seconds')"

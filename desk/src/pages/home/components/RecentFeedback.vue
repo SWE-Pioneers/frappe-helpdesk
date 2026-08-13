@@ -3,7 +3,7 @@
     <div class="flex flex-col rounded-md p-4 min-h-48 grow w-full h-full">
       <div class="flex flex-col sm:flex-row gap-4 h-full w-full">
         <div class="flex items-center justify-between sm:hidden">
-          <div class="text-ink-gray-8 text-lg font-semibold">
+          <div class="text-ink-gray-8 text-lg-semibold">
             {{ __("Reviews") }}
           </div>
           <TabButtons
@@ -18,7 +18,7 @@
           :class="{ 'hidden sm:flex': currentTab === 'feedback' }"
         >
           <div class="items-center justify-between hidden sm:flex">
-            <div class="text-ink-gray-8 text-lg font-semibold">
+            <div class="text-ink-gray-8 text-lg-semibold">
               {{ __("Reviews") }}
             </div>
             <TabButtons
@@ -35,7 +35,7 @@
             <div class="flex flex-col gap-1">
               <div class="flex items-center gap-1">
                 <LucideStar class="size-4 fill-[#de9735] text-[#de9735]" />
-                <div class="text-2xl font-medium text-ink-gray-8">
+                <div class="text-3xl-medium text-ink-gray-8">
                   {{ chartConfig.averageRating }}
                 </div>
               </div>
@@ -44,7 +44,7 @@
                 @click="redirectToSeeAllReviews"
               >
                 {{ __("{0} reviews", chartConfig.totalFeedbacks) }}
-                <FeatherIcon name="arrow-up-right" class="size-3.5 ml-0.5" />
+                <FeatherIcon name="arrow-up-right" class="size-3.5 ms-0.5" />
               </div>
             </div>
             <div v-if="chartConfig.totalFeedbacks > 0" class="text-sm">
@@ -115,7 +115,7 @@
             </Dropdown>
 
             <!-- Period dropdown second -->
-            <div class="flex items-center gap-2 ml-auto">
+            <div class="flex items-center gap-2 ms-auto">
               <Dropdown
                 v-if="!showDatePicker && currentPeriod !== 'custom_range'"
                 :options="periodOptions"
@@ -182,7 +182,7 @@
               <!-- Rating & Title -->
               <div class="flex items-center gap-2 mb-2">
                 <div
-                  class="flex items-center gap-1 p-1 pl-0 rounded"
+                  class="flex items-center gap-1 p-1 ps-0 rounded"
                   :class="[getRatingColor(currentFeedback.star_rating).text]"
                 >
                   <LucideStar
@@ -190,12 +190,12 @@
                     :class="getRatingColor(currentFeedback.star_rating).text"
                   />
                   <span
-                    class="text-base font-medium text-ink-gray-7"
+                    class="text-base-medium text-ink-gray-7"
                     :class="getRatingColor(currentFeedback.star_rating).text"
                     >{{ currentFeedback.star_rating }}</span
                   >
                 </div>
-                <span class="text-base text-ink-gray-7 font-medium">{{
+                <span class="text-base-medium text-ink-gray-7">{{
                   currentFeedback.feedback || __("Feedback")
                 }}</span>
               </div>
@@ -232,7 +232,10 @@
                     @click="prevFeedback"
                     :disabled="currentIndex === 0"
                   >
-                    <FeatherIcon name="chevron-left" class="size-4" />
+                    <FeatherIcon
+                      name="chevron-left"
+                      class="size-4 rtl:rotate-180"
+                    />
                   </Button>
                   <Button
                     variant="ghost"
@@ -240,7 +243,10 @@
                     @click="nextFeedback"
                     :disabled="currentIndex >= chartConfig.feedbacks.length - 1"
                   >
-                    <FeatherIcon name="chevron-right" class="size-4" />
+                    <FeatherIcon
+                      name="chevron-right"
+                      class="size-4 rtl:rotate-180"
+                    />
                   </Button>
                 </div>
               </div>
@@ -309,8 +315,8 @@ import EmptyState from "@/components/EmptyState.vue";
 
 const router = useRouter();
 const chartTabs = [
-  { label: "Rating", value: "rating" },
-  { label: "Feedback", value: "feedback" },
+  { label: __("Rating"), value: "rating" },
+  { label: __("Feedback"), value: "feedback" },
 ];
 const currentTab = ref("rating");
 const { views } = useView("HD Ticket");
@@ -664,7 +670,7 @@ const redirectToSeeAllReviews = () => {
 const getRatingColor = (rating: number) => {
   if (rating >= 4)
     return {
-      text: "text-ink-green-3 fill-ink-green-3",
+      text: "text-ink-green-6 fill-ink-green-6",
       bg: "bg-surface-green-2",
     };
   if (rating >= 3)
@@ -673,7 +679,7 @@ const getRatingColor = (rating: number) => {
       bg: "bg-surface-yellow-2",
     };
   return {
-    text: "text-ink-red-3 fill-ink-red-3",
+    text: "text-ink-red-6 fill-ink-red-6",
     bg: "bg-surface-red-2",
   };
 };

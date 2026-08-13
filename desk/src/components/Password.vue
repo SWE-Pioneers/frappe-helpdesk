@@ -13,7 +13,7 @@
       <Tooltip>
         <template #body>
           <div
-            class="rounded bg-surface-gray-7 py-1.5 px-2 text-xs text-ink-white shadow-xl"
+            class="rounded bg-surface-gray-10 py-1.5 px-2 text-xs text-ink-base shadow-xl"
           >
             <span class="flex items-center gap-1">
               {{ show ? "Hide Password" : "Show Password" }}
@@ -24,7 +24,7 @@
           <component
             v-show="showEye"
             :is="show ? LucideEyeOff : LucideEye"
-            class="h-3 cursor-pointer mr-1"
+            class="h-3 cursor-pointer me-1"
             @click="show = !show"
           />
         </div>

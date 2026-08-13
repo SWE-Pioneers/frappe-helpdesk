@@ -16,7 +16,7 @@
         <ShieldCheck class="size-6 text-ink-gray-6" />
       </div>
       <div class="flex flex-col items-center gap-1">
-        <div class="text-base font-medium text-ink-gray-6">
+        <div class="text-base-medium text-ink-gray-6">
           {{ __("No SLA found") }}
         </div>
         <div class="text-p-sm text-ink-gray-5 max-w-60 text-center">
@@ -24,9 +24,9 @@
         </div>
       </div>
     </div>
-    <div v-else class="-ml-2">
+    <div v-else class="-ms-2">
       <div
-        class="grid grid-cols-6 items-center gap-3 text-sm text-ink-gray-5 ml-2"
+        class="grid grid-cols-6 items-center gap-3 text-sm text-ink-gray-5 ms-2"
       >
         <div class="col-span-5">
           {{ __("Policy name") }}

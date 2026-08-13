@@ -7,11 +7,12 @@
           icon-left="lucide-plus"
           @click="togglePopover()"
           :label="__('Add Assignee')"
+          class="rtl:flex-row-reverse"
         />
       </template>
       <template #body="{ togglePopover }">
         <div
-          class="mt-1 rounded-lg bg-surface-white py-1 text-base shadow-2xl w-60"
+          class="mt-1 rounded-lg bg-surface-base py-1 text-base shadow-2xl w-60"
         >
           <div class="relative px-1.5 pt-0.5">
             <ComboboxInput
@@ -28,7 +29,7 @@
               :placeholder="__('Search')"
             />
             <button
-              class="absolute right-1.5 inline-flex h-7 w-7 items-center justify-center"
+              class="absolute end-1.5 inline-flex h-7 w-7 items-center justify-center"
               @click="query = ''"
             >
               <FeatherIcon name="x" class="w-4" />
@@ -81,7 +82,7 @@
           <div class="border-t p-1.5 pb-0.5">
             <Button
               variant="ghost"
-              class="w-full"
+              class="w-full rtl:flex-row-reverse"
               icon-left="lucide-plus"
               :label="__('Invite agent')"
               @click="inviteAgents"

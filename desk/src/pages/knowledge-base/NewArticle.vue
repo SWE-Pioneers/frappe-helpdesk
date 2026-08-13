@@ -10,7 +10,7 @@
       <div class="flex flex-col gap-3 rounded-lg border w-full p-4">
         <div class="flex justify-between items-center mb-3">
           <!-- Author Info -->
-          <div class="flex gap-1 items-center flex-1 mr-7 max-w-fit">
+          <div class="flex gap-1 items-center flex-1 me-7 max-w-fit">
             <UserAvatar :name="user.name" :expand="true" />
             <span>{{ __("in") }}</span>
             <Link
@@ -34,7 +34,7 @@
         </div>
         <!-- Title -->
         <textarea
-          class="w-full resize-none border-0 bg-transparent text-3xl font-bold placeholder-ink-gray-3 p-0 pb-3 border-b border-outline-gray-modals focus:ring-0 focus:border-outline-gray-modals"
+          class="w-full resize-none border-0 bg-transparent text-4xl-bold placeholder-ink-gray-3 p-0 pb-3 border-b border-outline-elevation-2 focus:ring-0 focus:border-outline-elevation-2"
           v-model="title"
           :placeholder="__('Title')"
           rows="1"
@@ -49,33 +49,34 @@
           "
         />
         <!-- Article Content -->
-        <TextEditor
-          :content="content"
-          @change="content = $event"
+        <Editor
+          v-model="content"
+          :extensions="extensions"
+          :upload-function="(file:any) => uploadFunction(file, 'HD Article', null, false)"
           :placeholder="__('Write your article here...')"
-          editor-class="rounded-b-lg max-w-[unset] prose-sm h-[calc(100vh-340px)] sm:h-[calc(100vh-250px)] overflow-auto"
         >
-          <template #bottom>
-            <TextEditorFixedMenu
-              class="-ml-1 overflow-x-auto w-full"
-              :buttons="textEditorMenuButtons"
+          <template #default>
+            <EditorContent
+              class="rounded-b-lg max-w-[unset] prose-sm h-[calc(100vh-340px)] sm:h-[calc(100vh-250px)] overflow-auto"
+            />
+            <EditorFixedMenu
+              class="-ms-1 overflow-x-auto w-full"
+              :items="fullToolbar"
             />
           </template>
-        </TextEditor>
+        </Editor>
       </div>
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
-import {
-  Breadcrumbs,
-  TextEditor,
-  TextEditorFixedMenu,
-  toast,
-  usePageMeta,
-} from "frappe-ui";
-import { useOnboarding, Link } from "frappe-ui/frappe";
+import { Breadcrumbs, toast, usePageMeta } from "frappe-ui";
+import { Editor, EditorContent, EditorFixedMenu } from "frappe-ui/editor";
+import { buildEditorExtensions, fullToolbar } from "@/components/editor/config";
+const extensions = buildEditorExtensions();
+import { useOnboarding } from "frappe-ui/frappe";
+import Link from "@/components/frappe-ui/Link.vue";
 import { computed, ref, watch } from "vue";
 import { __ } from "@/translation";
 
@@ -85,7 +86,7 @@ import { globalStore } from "@/stores/globalStore";
 import { newArticle } from "@/stores/knowledgeBase";
 import { useUserStore } from "@/stores/user";
 import { Article } from "@/types";
-import { textEditorMenuButtons } from "@/utils";
+import { uploadFunction } from "@/utils";
 import { useRoute, useRouter } from "vue-router";
 
 const userStore = useUserStore();

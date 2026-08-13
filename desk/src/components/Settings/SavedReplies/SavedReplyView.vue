@@ -1,18 +1,9 @@
 <template>
-  <SettingsLayoutBase>
-    <template #title>
-      <div class="flex items-center gap-2">
-        <Button
-          variant="ghost"
-          icon-left="chevron-left"
-          :label="savedReplyData.title || __('New Saved Reply')"
-          size="md"
-          @click="goBack()"
-          class="cursor-pointer -ml-4 hover:bg-transparent focus:bg-transparent focus:outline-none focus:ring-0 focus:ring-offset-0 focus-visible:none active:bg-transparent active:outline-none active:ring-0 active:ring-offset-0 active:text-ink-gray-5 font-semibold text-ink-gray-7 text-lg hover:opacity-70 !pr-0"
-        />
-        <UnsavedBadge :show="isDirty" />
-      </div>
-    </template>
+  <SettingsLayoutBase
+    :back-label="savedReplyData.title || __('New Saved Reply')"
+    :on-back="goBack"
+    :dirty="isDirty"
+  >
     <template #header-actions>
       <div class="flex items-center gap-2">
         <Button
@@ -63,8 +54,8 @@
             <ErrorMessage class="text-p-sm" :message="errors.title" />
           </div>
           <div class="space-y-1.5">
-            <FormLabel :label="__('Scope')" />
             <Select
+              label="Scope"
               v-model="savedReplyData.scope"
               :options="scopeDropdownOptions"
               required
@@ -76,11 +67,12 @@
             </Select>
             <FormLabel
               :label="__('Choose who can view and use this response.')"
+              size="md"
             />
           </div>
         </div>
         <div v-if="savedReplyData.scope === 'Team'" class="space-y-1.5">
-          <FormLabel :label="__('Teams')" required />
+          <FormLabel :label="__('Teams')" required size="md" />
           <MultiSelect
             :options="teamsList"
             v-model="savedReplyData.teams"
@@ -95,7 +87,7 @@
         </div>
         <div class="space-y-1.5">
           <div class="flex items-center justify-between">
-            <FormLabel :label="__('Response')" required />
+            <FormLabel :label="__('Response')" required size="md" />
             <DocumentationButton
               url="https://docs.frappe.io/helpdesk/saved-replies"
             />
@@ -127,8 +119,13 @@
 </template>
 
 <script setup lang="ts">
+import CompactEditor from "@/components/CompactEditor.vue";
+import ConfirmDialog from "@/components/ConfirmDialog.vue";
+import DocumentationButton from "@/components/DocumentationButton.vue";
+import { useAuthStore } from "@/stores/auth";
+import { useConfigStore } from "@/stores/config";
+import { __ } from "@/translation";
 import {
-  Badge,
   Button,
   createListResource,
   createResource,
@@ -140,23 +137,17 @@ import {
   Select,
   toast,
 } from "frappe-ui";
-import { computed, inject, onUnmounted, ref, watch } from "vue";
-import { disableSettingModalOutsideClick } from "../settingsModal";
-import { __ } from "@/translation";
-import PreviewDialog from "./components/PreviewDialog.vue";
-import ConfirmDialog from "@/components/ConfirmDialog.vue";
-import CompactEditor from "@/components/CompactEditor.vue";
-import DocumentationButton from "@/components/DocumentationButton.vue";
 import { storeToRefs } from "pinia";
-import { useConfigStore } from "@/stores/config";
-import { useAuthStore } from "@/stores/auth";
-import { FieldAutocomplete } from "../../../tiptap-extensions";
-import SettingsLayoutBase from "../../layouts/SettingsLayoutBase.vue";
 import UnsavedBadge from "@/components/UnsavedBadge.vue";
+import { computed, inject, onUnmounted, ref, watch } from "vue";
+import GlobeIcon from "~icons/lucide/globe";
 import UserIcon from "~icons/lucide/user";
 import UsersIcon from "~icons/lucide/users";
-import GlobeIcon from "~icons/lucide/globe";
+import { FieldAutocomplete } from "../../../tiptap-extensions";
 import { SavedReply, SavedReplyListResourceSymbol, Team } from "../../../types";
+import SettingsLayoutBase from "../../layouts/SettingsLayoutBase.vue";
+import { disableSettingModalOutsideClick } from "../settingsModal";
+import PreviewDialog from "./components/PreviewDialog.vue";
 
 const showConfirmDialog = ref({
   show: false,
