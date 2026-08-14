@@ -185,7 +185,7 @@ export const customerFields: FieldConfig[] = [
     type: "Link",
     label: __("Country"),
     placeholder: __("Select Country"),
-    prefix: h(LucideMapPin, { class: "size-4 mr-1.5" }),
+    prefix: h(LucideMapPin, { class: "size-4 me-1.5" }),
     doctype: "Country",
   },
   {

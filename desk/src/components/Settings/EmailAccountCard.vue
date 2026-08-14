@@ -5,7 +5,7 @@
     <!-- avatar and name -->
     <div class="flex justify-between items-center gap-2">
       <EmailProviderIcon :logo="emailIcon[emailAccount.service]" />
-      <div class="rtl:text-right">
+      <div class="rtl:text-end">
         <p class="text-base-medium text-ink-gray-7">
           {{ emailAccount.email_account_name }}
         </p>
