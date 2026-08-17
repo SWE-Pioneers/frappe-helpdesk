@@ -23,18 +23,22 @@
         />
 
         <div class="space-y-1.5">
-          <FormLabel :label="__('Preview')" />
-          <div class="relative">
-            <TextEditor
-              editor-class="!prose-sm max-w-full overflow-auto min-h-[180px] max-h-80 py-1.5 px-2 rounded border border-[--surface-gray-2] bg-surface-gray-2 placeholder-ink-gray-4 hover:border-outline-gray-modals hover:bg-surface-gray-3 hover:shadow-sm focus:bg-surface-white focus:border-outline-gray-4 focus:shadow-sm focus:ring-0 focus-visible:ring-2 focus-visible:ring-outline-gray-3 text-ink-gray-8 transition-colors flex"
-              :bubble-menu="menuButtons"
-              :content="dialogModel.preview"
+          <FormLabel :label="__('Preview')" size="md" />
+          <div class="relative pointer-events-none">
+            <Editor
+              :model-value="dialogModel.preview"
+              :extensions="extensions"
               :editable="false"
-              class="pointer-events-none"
-            />
+            >
+              <template #default>
+                <EditorContent
+                  class="!prose-sm max-w-full overflow-auto min-h-[180px] max-h-80 py-1.5 px-2 rounded border border-[--surface-gray-2] bg-surface-gray-2 placeholder-ink-gray-4 hover:border-outline-elevation-2 hover:bg-surface-gray-3 hover:shadow-sm focus:bg-surface-base focus:border-outline-gray-4 focus:shadow-sm focus:ring-0 focus-visible:ring-2 focus-visible:ring-outline-gray-3 text-ink-gray-8 transition-colors"
+                />
+              </template>
+            </Editor>
             <div
               v-if="getResponsePreviewResource.loading"
-              class="absolute top-0 end-0 flex items-center justify-center size-full rounded-md bg-surface-gray-7/20"
+              class="absolute top-0 end-0 flex items-center justify-center size-full rounded-md bg-surface-gray-10/20"
             >
               <LoadingIndicator class="size-4" />
             </div>
@@ -46,19 +50,21 @@
 </template>
 
 <script setup lang="ts">
+import { Link } from "@/components";
+import { buildEditorExtensions } from "@/components/editor/config";
+import { __ } from "@/translation";
+import { RenderedSavedReply } from "@/types";
 import {
   createListResource,
   createResource,
   Dialog,
   FormLabel,
-  TextEditor,
+  LoadingIndicator,
   toast,
 } from "frappe-ui";
-import { LoadingIndicator } from "frappe-ui";
-import { menuButtons } from "../savedReplies";
-import { Link } from "@/components";
+import { Editor, EditorContent } from "frappe-ui/editor";
 import { watch } from "vue";
-import { __ } from "@/translation";
+const extensions = buildEditorExtensions();
 
 const dialogModel = defineModel<{
   show: boolean;
@@ -69,8 +75,8 @@ const dialogModel = defineModel<{
 
 const getResponsePreviewResource = createResource({
   url: "helpdesk.api.saved_replies.get_rendered_saved_reply",
-  onSuccess: (data) => {
-    dialogModel.value.preview = data;
+  onSuccess: (data: RenderedSavedReply) => {
+    dialogModel.value.preview = data.message;
   },
 });
 

@@ -337,7 +337,13 @@ export interface EmailAccount {
   default_incoming?: boolean;
 }
 
-export type TicketTab = "activity" | "email" | "comment" | "details" | "call";
+export type TicketTab =
+  | "activity"
+  | "email"
+  | "comment"
+  | "details"
+  | "call"
+  | "analytics";
 
 export interface TabObject {
   name: TicketTab;
@@ -400,7 +406,7 @@ export interface View {
   pinned?: boolean;
   public?: boolean;
   group_by_field?: string;
-  name?: string;
+  name: string;
   is_customer_portal?: boolean;
 }
 
@@ -658,6 +664,8 @@ export interface SlaPolicy {
   description: string;
   default_sla: boolean;
   enabled: boolean;
+  rank: number;
+  creation: string;
 }
 
 export interface Team {
@@ -672,7 +680,36 @@ export interface SavedReply {
   message: string;
   scope: string;
   teams: Team[];
+  /** JSON-encoded SavedReplyAction[] */
+  actions: string;
   owner: string;
+}
+
+export type SavedReplyActionType =
+  | "Set Status"
+  | "Set Priority"
+  | "Set Team"
+  | "Set Ticket Type"
+  | "Assign Agent"
+  | "Assign to Me"
+  | "Add Tag"
+  | "Remove Tag"
+  | "Add Comment";
+
+export interface SavedReplyAction {
+  action_type: SavedReplyActionType;
+  value: string;
+  label?: string;
+  /** Title of the saved reply that staged this action */
+  source?: string;
+  /** Value the saved reply shipped, so an edited comment can be restored */
+  original_value?: string;
+}
+
+export interface RenderedSavedReply {
+  title: string;
+  message: string;
+  actions: SavedReplyAction[];
 }
 
 export type APIOptions = DropdownOption[] | string[] | [];
@@ -750,6 +787,7 @@ declare global {
     agent: string | null;
     default_country: string;
     apps: string[];
+    telemetry: { enabled: boolean };
   }
 }
 
